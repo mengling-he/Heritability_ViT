@@ -1,0 +1,18 @@
+# Analysis outputs (all result folders: result/, result0/, result2/, cv5_rep*/ inside them, ...)
+Analysis/**/result*/
+
+# Scratch / exploratory scripts: anything in a script/ folder starting with "0"
+Analysis/**/script/0*
+Analysis/**/script/*0
+
+# R / OS / editor clutter
+.Rhistory
+.RData
+.Rproj.user/
+.DS_Store
+.claude/
+
+# Raw data: publish only ViT + thresholding features; U-Net features stay local
+raw_data/*
+!raw_data/*_vit.csv
+!raw_data/*_thresholding.csv
