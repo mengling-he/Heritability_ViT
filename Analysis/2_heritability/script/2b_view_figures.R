@@ -80,6 +80,11 @@ make_panel <- function(view_label) {
 pB <- make_panel("Side View") + make_panel("Top View") + plot_layout(guides = "keep")
 ggsave(result_path(sprintf("h2_series_day_%s_by_view.png", segmentation_method)), pB, width = 20, height = 5, dpi = 300)
 
+pB2 <- make_panel("Side View") + make_panel("Top View") +
+  plot_layout(ncol = 1, guides = "keep")
+
+ggsave(result_path(sprintf("h2_series_day_%s_by_view2.png", segmentation_method)), pB2, width = 12, height = 8, dpi = 300)
+
 cat(sprintf("Fig A: %d traits (side+top bars). Fig B: %d side, %d top traits with peak H2 > %.2f.\n",
             n_distinct(h2$Metric),
             n_distinct(ts$Trait[ts$View == "Side View"]),

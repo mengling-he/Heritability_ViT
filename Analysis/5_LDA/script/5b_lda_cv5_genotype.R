@@ -48,7 +48,8 @@ n_folds   <- 5
 # >1 = repeated 5-fold CV with different random genotype splits;
 # override from the command line, e.g. Rscript 5b_lda_cv5_genotype.R 1
 args      <- commandArgs(trailingOnly = TRUE)
-n_repeats <- if (length(args) >= 1) as.integer(args[1]) else 5
+n_repeats <- 10
+#n_repeats <- if (length(args) >= 1) as.integer(args[1]) else 5
 base_seed <- 123   # repeat r uses seed base_seed + r - 1
 n_dims    <- 5
 lda_dim_names <- paste0("LD", 1:n_dims)
@@ -230,23 +231,24 @@ print(as.data.frame(h2_summary), row.names = FALSE, digits = 3)
 # Plots
 # =============================================================================
 # H2 per LD: mean per-fold H2 with corrected 95% CI (see h2_summary)
+h2_summary <- read.csv(cv_path(sprintf("cv5_LDA_h2_summary_%s.csv", segmentation_method)))
 p_h2 <- ggplot(h2_summary, aes(Trait, H2_mean)) +
   geom_col(fill = "salmon", width = 0.65) +
   geom_errorbar(aes(ymin = CI95_low, ymax = CI95_up), width = 0.25) +
   geom_text(aes(y = 0, label = sprintf("%.3f", H2_mean)), vjust = -0.6, size = 3.5) +
-  coord_cartesian(ylim = c(0, 1)) +   # clip (not drop) CI bars that cross 0 or 1
+  coord_cartesian(ylim = c(0, 0.8)) +   # clip (not drop) CI bars that cross 0 or 1
   theme_minimal(base_size = 14) +
   labs(x = NULL, y = expression(H^2))
-ggsave(cv_path(sprintf("cv5_LDA_h2_%s.png", segmentation_method)), p_h2, width = 6, height = 5, dpi = 300)
+ggsave(cv_path(sprintf("cv5_LDA_h2_%s2.png", segmentation_method)), p_h2, width = 4, height = 6, dpi = 300)
 
 # same bar plot without error bars
 p_h2_noci <- ggplot(h2_summary, aes(Trait, H2_mean)) +
   geom_col(fill = "salmon", width = 0.65) +
   geom_text(aes(y = 0, label = sprintf("%.3f", H2_mean)), vjust = -0.6, size = 3.5) +
-  coord_cartesian(ylim = c(0, 1)) +
+  coord_cartesian(ylim = c(0, 0.7)) +
   theme_minimal(base_size = 14) +
   labs(x = NULL, y = expression(H^2))
-ggsave(cv_path(sprintf("cv5_LDA_h2_noCI_%s.png", segmentation_method)), p_h2_noci, width = 6, height = 5, dpi = 300)
+ggsave(cv_path(sprintf("cv5_LDA_h2_noCI_%s_@.png", segmentation_method)), p_h2_noci, width = 7, height = 5, dpi = 300)
 
 # distribution of per-fold H2: boxplot over all folds, dots colored by repeat
 p_folds <- ggplot(fold_h2, aes(Trait, H2)) +
